@@ -1,0 +1,42 @@
+#+TITLE: Teleport Application
+
+* Usage
+
+  - Building a teleport application for the shell.
+
+* Prologue
+
+Containing headers, imports and global definitions.
+
+#+NAME: prologue
+#+BEGIN_SRC haskell :tangle teleport.hs
+  -- what does this do???
+  {-# LANGUAGE OverloadedStrings #-}
+  {-# LANGUAGE RecordWildCards #-}
+
+  -- imports
+  import qualified Turtle
+  import Prelude hiding (FilePath)
+  import Filesystem.Path.CurrentOS as Path
+  import qualified Data.Aeson as JSON
+
+  -- what the hell is this next line???
+  import Data.Aeson ((.=), (.:))
+
+  -- standard imports
+  import Options.Applicative
+  import Control.Monad
+  import Data.Traversable
+  import Data.Maybe
+  import Data.List
+
+  -- data and text manipulating libraries maybe??
+  import qualified Data.Text as T
+  import qualified Data.Text.Encoding as T.Encoding
+  -- use bytestring to read and write JSON files onto the system
+  import qualified Data.ByteString.Lazy as B
+
+  -- import ANSI library to colour our outputs
+  import qualified System.Console.ANSI as ANSI
+
+#+END_SRC

@@ -1,0 +1,102 @@
+#+TITLE: Teleport Application
+
+* Usage
+
+  - Building a teleport application for the shell.
+
+* Prologue
+
+Containing headers and imports.
+
+#+NAME: prologue
+#+BEGIN_SRC haskell :tangle teleport.hs
+  -- what does this do???
+  {-# LANGUAGE OverloadedStrings #-}
+  {-# LANGUAGE RecordWildCards #-}
+
+  -- imports
+  import qualified Turtle
+  import Prelude hiding (FilePath)
+  import Filesystem.Path.CurrentOS as Path
+  import qualified Data.Aeson as JSON
+
+  -- what the hell is this next line???
+  import Data.Aeson ((.=), (.:))
+
+  -- standard imports
+  import Options.Applicative
+  import Control.Monad
+  import Data.Traversable
+  import Data.Maybe
+  import Data.List
+
+  -- data and text manipulating libraries maybe??
+  import qualified Data.Text as T
+  import qualified Data.Text.Encoding as T.Encoding
+  -- use bytestring to read and write JSON files onto the system
+  import qualified Data.ByteString.Lazy as B
+
+  -- import ANSI library to colour our outputs
+  import qualified System.Console.ANSI as ANSI
+
+
+#+END_SRC
+* Description Strings
+
+Defines strings that are used throughout the app for descriptions.
+
+#+NAME: Description Strings
+#+BEGIN_SRC haskell teleport.hs
+  tpProgDesc :: String
+  tpProgDesc = "use teleport to set up teleport points and move to these " ++
+               "when needed"
+
+
+  tpHeader :: String
+  tpHeader = "Teleport: Move around your filesystem."
+
+#+END_SRC
+* Command Datatype
+
+The combined datatype representing all commands.
+
+#+NAME: Command-datatype
+#+BEGIN_SRC haskell :tangle teleport.hs 
+  data Command = CommandList |
+                 CommandAdd {
+                            addName :: String,
+                            folderPath :: FilePath
+                 } |
+                 CommandRemove {
+                               removeName :: String
+                               } |
+                 CommandGoto {
+                             gotoName :: String
+                             }
+                 deriving (Show)
+#+END_SRC
+* showHelpOnErrorExecParser??? what the hell?
+
+Defining a custom =execParser= that shows help on error.
+Also some other stuff- the command runner main function- that probably shouldn't be here.
+
+#+name: showHelpOnErrorExecParser
+#+BEGIN_SRC haskell :tangle teleport.hs
+  -- a version of execParser that shows full help on error
+
+  showHelpOnErrorExecParser :: ParserInfo a -> IO a
+  showHelpOnErrorExecParser = customExecParser (prefs showHelpOnError)
+
+
+  -- main function for this thing???
+  main :: IO ()
+  main = do
+    -- command :: Command
+    command  <- showHelpOnErrorExecParser (info (helper <*> parseCommand)
+                                          (fullDesc <>
+                                          progDesc tpProgDesc <>
+                                          header tpHeader))
+    -- run :: IO ()
+    rum command
+
+#+END_SRC
